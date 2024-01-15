@@ -98,5 +98,8 @@ SELECT C.customerNumber, C.customerName, O.orderDate, O.orderNumber, D.productCo
 > 결과
 <img width="340" alt="image" src="https://github.com/baggy102/Study_DataBase/assets/127190426/eec62643-3716-4aec-b0a5-db127a1426f1">
 
+</details>
 
+<details>
+<summary>inner join & outer join</summary>
 </details>
