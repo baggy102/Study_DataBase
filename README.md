@@ -101,5 +101,139 @@ SELECT C.customerNumber, C.customerName, O.orderDate, O.orderNumber, D.productCo
 </details>
 
 <details>
-<summary>inner join & outer join</summary>
+<summary>inner join & outer join & cross join</summary>
+각기 다른 두 테이블을 합쳐서 결과를 내고 싶을 때
+
+JOIN 기능적 분류
+
+INNER JOIN은 두 테이블을 조인할 떄, 두 테입르에 모두 지정한 열의 데이터가 있는 경우
+OUTER JOIN은 두 테이블을 조인할 때, 1개의 테이블에만 데이터가 있어도 결과가 나온다.
+
+CROSS JOIN은 한쪽 테이블의 모든 행과 다른 쪽 테이블의 모든 행을 조인
+SELF JOIN은 자기 자신과 조인한다는 의미로, 하나의 테이블을 사용한다.
+
+
+회원 + 구매 테이블 => 배송정보
+
+
+일대다 관계의 이해
+
+회원 테이블의 아이디 (PK)는 비어있지 않으며 중복을 허용 x
+
+구매 테이블에서 아이디(FK)
+
+회원 테이블에서 여러개의 물건을 주문 했을 때
+-> 
+구매 테이블에 FK 로 여러개 값이 올 수 있다.
+
+1대다 (=기본키, 외래키) 관계
+
+
+내부조인
+
+INNER JOIN은 교집합연산과 같다.
+조인 키 컬럼 값이 양쪽 테이블 데이터 집합에서 공통적으로 존재하는 데이터만 조인해 결과 데이터 집합을 추출한다.
+
+설명 (그림)
+
+```
+SELECT <열 목록>
+FROM <테이블>
+	INNER JOIN <두 번째 테이블>
+	ON <조인 조건>
+[WHERE 검색 조건]
+```
+이때 WHERE 조건은 생략 가능
+
+> 예제
+```
+SELECT * FROM buy INNER JOIN member
+	ON buy.mem_id = member.mem_id
+	WHERE buy.mem_id = 'GRL';
+```
+
+```
+SELECT mem_id, meme_name, prod_name, addr, CONCAT(phone1, phone2) AS '연락처'
+	FROM buy
+		INNER JOIN member
+		ON buy.mem_id = member.mem_id;
+```
+-> mem_id 열 이름이 두 테이블에서 같기 때문에 error 발생
+	어떤 테이블의 mem_id 인지 지정해주어야 한다.
+
+```
+SELECT buy.mem_id, meme_name, prod_name, addr, CONCAT(phone1, phone2) AS '연락처'
+	FROM buy
+		INNER JOIN member
+		ON buy.mem_id = member.mem_id;
+```
+
+내부조인은
+구매한 회원의 정보만 나온다.
+회원 중 구매하지 않은 사람의 정보까지 다 나오게 하고싶으면?
+
+한쪽 테이블의 모든 정보를 알고 싶은 경우에
+
+외부조인
+내부 조인은 두 테이블에 모두 데이터가 있어야만 결과 나온다.
+이와 달리 외부 조인은 한쪽엠나 데이터가 있어도 결과가 나온다.
+
+외부조인의 기본
+
+LEFT OUTER JOIN
+교집합 연산결과와 차집합 연산 결과를 합친것과 같다.
+조인 키 컬럼 값이 양쪽 테이블 데이터 집합에서 공통적으로 존재하는 데이터와 Left outer join 키워드 왼쪽에 명시된 테이블에만 존재하는 데이터를 결과 집합으로 추출하게 된다.
+
+RIHT OUTER JOIN
+left outer join과 기준이 반대
+
+FULL OUTER JOIN
+합집합 연산 결과와 같ㅇ다.
+조인 키 컬럼 값이 양쪽 테이블 데이터 집합에서 공통적으로 존재하는 데이터와 한쪽 테이블에만 존재하는 데이터도 모두 결과 데이터 집합으로 추출한다.
+
+외부조인은 두 테이블을 조인할 때 필요한 내용이 한쪽 테이블에만 있어도 결과를 추출할 수 있다. 
+
+형태
+```
+SELECT <열 목록>
+FROM <테이블(LEFT 테이블)>
+	<LEFT | RIGHT | FULL> OUTER JOIN <두 번째 테이블(RIGHT 테이블)>
+	ON <조인 조건>
+[WHERE 검색 조건];
+```
+
+> 예제
+
+LEFT OUTER JOIN
+```
+SELECT M.mem_id, M.mem_name, B.prod_name, M.addr,
+	FROM member M
+		LEFT OUTER JOIN buy B
+		ON M.mem_id = B.mem_id
+	ORDER BY M.mem_id;
+```
+
+```
+SELEVT M.mem_id, M.mem_name, B.prod_name, M.addr
+	FROM buy B
+		RIGHT OUTER JOIN member M
+		ON M.mem_id = B.mem_id
+	ORDER BY M.mem_id;
+```
+위치만 바꿔
+
+
+기타조인
+
+상호조인 (CROSS JOIN)
+한쪽 테이블의 모든 행과 다른 쪽 테이블의 모든 행을 조인시키는 기능
+조인 결과는 각 행의 개수를 곱한 개수가 된다.
+
+대용량의 데이터를 생성할 필요가 있는 경우 사용한다.
+
+자체조인 (SELF JOIN)
+자기 자신과 조인하는 기능
+
+![image](https://github.com/baggy102/Study_DataBase/assets/127190426/c202aa91-85f2-4159-8065-80552e596894)
+ 
 </details>
